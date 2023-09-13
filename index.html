@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- <h1>Chedz</h1> -->
+    <h1>Loading light thingies....</h1>
     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni officiis accusamus repellendus nostrum veniam fuga rem, quisquam fugiat ex sed cupiditate laborum dicta saepe soluta molestias necessitatibus. Quam, ipsum odit!</p> -->
     <!-- <script type="module" src="main.js"></script> -->
     <script type="module">
@@ -22,6 +22,8 @@
         let sphere, dot, point;
 
         let angle = Math.PI / 16 ;
+
+        let colorInterval = 0;
 
         function initScene(){
             scene = new THREE.Scene();
@@ -254,6 +256,37 @@
         function animation(){
             if(matrix.length==0) return;
 
+            let redVal = 0;
+            let blueVal = 0;
+            let greenVal = 0;
+
+
+            switch (colorInterval) {
+                case 0: //red
+                    redVal = 1;
+                    blueVal = 0;
+                    greenVal = 0;
+                    break;
+
+                case 1: //green
+                    redVal = 0;
+                    blueVal = 0;
+                    greenVal = 1;
+                    break;
+
+                case 2: //blue
+                    redVal = 0;
+                    blueVal = 1;
+                    greenVal = 0;
+
+                    colorInterval = 0;
+                    break;
+            
+                default:
+
+                    break;
+            }
+
             for (let rowIndex = 0; rowIndex < matrix[0].length; rowIndex++) {
                 // const element = array[index];
                 for (let colIndex = 0; colIndex < matrix.length; colIndex++) {
@@ -262,14 +295,16 @@
 
                     setTimeout(function timer() {
                         // console.log("hello world");
-                        point.material.color.r = 1
-                        point.material.color.b = 0
-                    }, rowIndex * 1000);
+                        point.material.color.r = redVal;
+                        point.material.color.g = greenVal;
+                        point.material.color.b = blueVal;
+                    }, rowIndex * 100);
                    
                     
                 }
                 
             }
+            colorInterval++;
         }
 
         globalThis.animation = animation;
@@ -346,6 +381,10 @@
         // let col1 = createColumn();
         // globalThis.col1 = col1;
         addSphere();
+        createMatrix(8);
+        setInterval(function() {
+            animation();
+        }, 2000);
         animate();
 
         // createMatrix(8)
