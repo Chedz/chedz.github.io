@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Loading light thingies....</h1>
+    <!-- <h1>Loading light thingies....</h1> -->
     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni officiis accusamus repellendus nostrum veniam fuga rem, quisquam fugiat ex sed cupiditate laborum dicta saepe soluta molestias necessitatibus. Quam, ipsum odit!</p> -->
     <!-- <script type="module" src="main.js"></script> -->
     <script type="module">
@@ -266,12 +266,16 @@
                     redVal = 1;
                     blueVal = 0;
                     greenVal = 0;
+
+                    colorInterval++;
                     break;
 
                 case 1: //green
                     redVal = 0;
                     blueVal = 0;
                     greenVal = 1;
+
+                    colorInterval++;
                     break;
 
                 case 2: //blue
@@ -304,7 +308,6 @@
                 }
                 
             }
-            colorInterval++;
         }
 
         globalThis.animation = animation;
