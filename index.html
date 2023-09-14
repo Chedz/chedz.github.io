@@ -8,8 +8,8 @@
 <body>
     <!-- <h1>Loading light thingies....</h1> -->
     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni officiis accusamus repellendus nostrum veniam fuga rem, quisquam fugiat ex sed cupiditate laborum dicta saepe soluta molestias necessitatibus. Quam, ipsum odit!</p> -->
-    <!-- <script type="module" src="main.js"></script> -->
-    <script type="module">
+    <script type="module" src="main.js"></script>
+    <!-- <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three';
         // import * as OrbitControls from "https://cdn.jsdelivr.net/npm/three-orbitcontrols@2.110.3/OrbitControls.min.js";
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js';
@@ -23,7 +23,8 @@
 
         let angle = Math.PI / 16 ;
 
-        let colorInterval = 0;
+        // let colorInterval = 0;
+        let matricesColorInterval = [0,0,0];
 
         function initScene(){
             scene = new THREE.Scene();
@@ -54,14 +55,16 @@
             scene.add( cube );
         }
 
-        function addSphere(){
-            const geometry = new THREE.SphereGeometry(1, 16, 16 )
+        function addSphere(radius=1, widthSegments=16, heightSegments=16){
+            const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments )
             const material = new THREE.MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
             sphere = new THREE.Mesh( geometry, material );
             scene.add( sphere );
 
             // addDot();
         }
+
+        globalThis.addSphere = addSphere;
 
         function addDot(multiplier){
             // making an empty point
@@ -86,67 +89,86 @@
             // rotateAboutPoint(dot, new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), 2);
         }
 
-        function createColumn(){ // 15 pixels (rows) per column
-            let column = [
-                addDot(-7),
-                addDot(-6),
-                addDot(-5),
-                addDot(-4),
-                addDot(-3),
-                addDot(-2),
-                addDot(-1),
-                addDot(0),
-                addDot(1),
-                addDot(2),
-                addDot(3),
-                addDot(4),
-                addDot(5),
-                addDot(6),
-                addDot(7)
-            ];
-            return column;
-        }
+        // function createColumn(){ // 15 pixels (rows) per column
+        //     let column = [
+        //         addDot(-7),
+        //         addDot(-6),
+        //         addDot(-5),
+        //         addDot(-4),
+        //         addDot(-3),
+        //         addDot(-2),
+        //         addDot(-1),
+        //         addDot(0),
+        //         addDot(1),
+        //         addDot(2),
+        //         addDot(3),
+        //         addDot(4),
+        //         addDot(5),
+        //         addDot(6),
+        //         addDot(7)
+        //     ];
+        //     return column;
+        // }
 
-        function createPoints(){
-            var distance = Math.min(200, window.innerWidth / 4);
-            var geometry = new THREE.BufferGeometry();
-            let vertices = [];
+        // function createPoints(){
+        //     var distance = Math.min(200, window.innerWidth / 4);
+        //     var geometry = new THREE.BufferGeometry();
+        //     let vertices = [];
 
-            for (let index = 0; index < 10; index++) {
+        //     for (let index = 0; index < 10; index++) {
                     
-                var vertex = new THREE.Vector3();
+        //         var vertex = new THREE.Vector3();
 
-                var theta = THREE.MathUtils.randFloatSpread(360);
-                var phi = THREE.MathUtils.randFloatSpread(360);
+        //         var theta = THREE.MathUtils.randFloatSpread(360);
+        //         var phi = THREE.MathUtils.randFloatSpread(360);
 
-                vertex.x = distance * Math.sin(theta) * Math.cos(phi);
-                vertex.y = distance * Math.sin(theta) * Math.cos(phi);
-                vertex.z = distance * Math.sin(theta);
+        //         vertex.x = distance * Math.sin(theta) * Math.cos(phi);
+        //         vertex.y = distance * Math.sin(theta) * Math.cos(phi);
+        //         vertex.z = distance * Math.sin(theta);
 
-                // geometry.vertices.push(vertex);
-                vertices.push(vertex);
-                console.log(vertex);
-                // geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([vertex.x,vertex.y,vertex.z]), 3))
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3))
+        //         // geometry.vertices.push(vertex);
+        //         vertices.push(vertex);
+        //         console.log(vertex);
+        //         // geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([vertex.x,vertex.y,vertex.z]), 3))
+        //     }
+        //     geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3))
 
-            var particles = new THREE.Points(geometry, new THREE.PointsMaterial(
-                {color: 0xff44ff, size: 2}));
-            particles.boundingSphere = 50;
+        //     var particles = new THREE.Points(geometry, new THREE.PointsMaterial(
+        //         {color: 0xff44ff, size: 2}));
+        //     particles.boundingSphere = 50;
 
-            var renderingParent = new THREE.Group();
-            renderingParent.add(particles);
-            // scene.add(renderingParent);
-        }
+        //     var renderingParent = new THREE.Group();
+        //     renderingParent.add(particles);
+        //     // scene.add(renderingParent);
+        // }
 
         let columnCount = 0;
         let matrix = [];
-        globalThis.matrix = matrix;
+        let matricesHolder =[];
+        globalThis.matricesHolder = matricesHolder;
 
-        function drawCircle(radius, vCount, zVal = 0){
+        function drawCircle(radius, rowCount, zVal = 0){
             pointsList = [];
             // drawPoint();
             // drawPoint(1,1,1);
+
+            let removeTopIndex;
+            let removeBottomIndex;
+            let vCount;
+
+            if(rowCount%2){ 
+                // console.log("odd")
+                vCount = (rowCount+1)*2;
+                removeTopIndex = vCount/4;
+                removeBottomIndex = ((3*vCount)/4)-1;
+            }else{
+                // console.log("even")
+                vCount = (rowCount*2) + 1;
+                removeTopIndex = vCount/4;
+                removeBottomIndex = ((3*vCount)/4);
+            }
+
+            // vCount = (rowCount+1)*2;
 
             let angle = 360.0 / vCount;
 
@@ -158,6 +180,7 @@
             // positions
             for (let i = 0; i < vCount; i++)
             {
+                // console.log("drawCircle: "+ radius);
                 let currentAngle = angle * i;
                 let x = radius * Math.cos((currentAngle * Math.PI) / 180.0); ;
                 let y = radius * Math.sin((currentAngle * Math.PI) / 180.0);
@@ -181,8 +204,6 @@
                 ))
             );
 
-            let removeTopIndex = vCount/4;
-            let removeBottomIndex = ((3*vCount)/4)-1;
 
             cleanedVertices.splice(removeTopIndex,1);
             cleanedVertices.splice(removeBottomIndex,1);
@@ -200,7 +221,7 @@
             matrix[columnCount] = pointsList;
             columnCount++;
 
-            console.log(pointsList.length)
+            // console.log(pointsList.length)
 
         }
         function rotateAlongAxis(inputArray, angle){
@@ -219,7 +240,7 @@
         globalThis.pointsList = pointsList;
 
         function drawPoint(x=0, y=0, z=0){
-            console.log('draw');
+            // console.log('draw');
             let bufferGeom = new THREE.BufferGeometry();
             let bufferMaterial = new THREE.PointsMaterial({ size: 0.1, color: 0x0000ff });
 
@@ -231,14 +252,18 @@
             bufferGeom.setAttribute("position", new THREE.Float32BufferAttribute(new THREE.Vector3(x,y,z), 3));
         }
 
-        function createMatrix(numOfCol){
+        function createMatrix(numOfCol=8, numOfRow=12, circleRadius=1,){
+            addSphere(circleRadius, numOfCol, numOfRow) //(radius=1, widthSegments=16, heightSegments=16)
+            columnCount=0;
+            matrix = [];
             for (let index = 0; index < numOfCol; index++) {
-                console.log("create: " + index)
-                drawCircle(1,24,0);
+                // console.log("create: " + index)
+                drawCircle(circleRadius,numOfRow,0); //radius, vCount, zVal = 0
                 // if(index > 0) rotateAlongAxis(matrix[index], ((2*Math.PI) / (numOfCol)) * index)
                 if(index > 0) rotateAlongAxis(matrix[index], index * ((2*Math.PI)/numOfCol ));
 
             }
+            matricesHolder.push(matrix);
         }
 
         globalThis.createMatrix = createMatrix;
@@ -253,12 +278,17 @@
 
         globalThis.getPoint = getPoint;
 
-        function animation(){
-            if(matrix.length==0) return;
+        function animation(matrixIndex){
+            let matrixAnimated = matricesHolder[matrixIndex];
+            if(matrixAnimated.length==0) return;
 
             let redVal = 0;
             let blueVal = 0;
             let greenVal = 0;
+
+            let colorInterval = matricesColorInterval[matrixIndex];
+
+            // console.log("matrix index: " + matrixIndex)
 
 
             switch (colorInterval) {
@@ -267,7 +297,7 @@
                     blueVal = 0;
                     greenVal = 0;
 
-                    colorInterval++;
+                    matricesColorInterval[matrixIndex]++;
                     break;
 
                 case 1: //green
@@ -275,7 +305,7 @@
                     blueVal = 0;
                     greenVal = 1;
 
-                    colorInterval++;
+                    matricesColorInterval[matrixIndex]++;
                     break;
 
                 case 2: //blue
@@ -283,7 +313,7 @@
                     blueVal = 1;
                     greenVal = 0;
 
-                    colorInterval = 0;
+                    matricesColorInterval[matrixIndex] = 0;
                     break;
             
                 default:
@@ -291,11 +321,11 @@
                     break;
             }
 
-            for (let rowIndex = 0; rowIndex < matrix[0].length; rowIndex++) {
+            for (let rowIndex = 0; rowIndex < matrixAnimated[0].length; rowIndex++) {
                 // const element = array[index];
-                for (let colIndex = 0; colIndex < matrix.length; colIndex++) {
+                for (let colIndex = 0; colIndex < matrixAnimated.length; colIndex++) {
                     // const element = array[index];
-                    let point = matrix[colIndex][rowIndex];
+                    let point = matrixAnimated[colIndex][rowIndex];
 
                     setTimeout(function timer() {
                         // console.log("hello world");
@@ -364,9 +394,9 @@
             scene.add(directionalLight)
         }
 
-        function updateCamera() {
-            camera.updateProjectionMatrix();
-        }
+        // function updateCamera() {
+        //     camera.updateProjectionMatrix();
+        // }
 
         function animate() {
             requestAnimationFrame( animate );
@@ -383,15 +413,27 @@
         // addBox();
         // let col1 = createColumn();
         // globalThis.col1 = col1;
-        addSphere();
-        createMatrix(8);
+        // addSphere();
+        // createMatrix(8);
+        // setInterval(function() {
+        //     animation();
+        // }, 2000);
+
+        createMatrix(8,12,1);
+        createMatrix(8,12,1.5);
+        createMatrix(8,12,2);
+
         setInterval(function() {
-            animation();
+            animation(0);
+            animation(1);
+            animation(2);
         }, 2000);
+
+
         animate();
 
         // createMatrix(8)
         // animation()
-    </script>
+    </script> -->
 </body>
 </html>
