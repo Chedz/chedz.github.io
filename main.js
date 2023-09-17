@@ -39,7 +39,7 @@ function addBox(){
 
 function addSphere(radius=1, widthSegments=16, heightSegments=16){
     const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments )
-    const material = new THREE.MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
+    const material = new THREE.MeshLambertMaterial( { color: 0x808080, wireframe: true, opacity: 0 } );
     sphere = new THREE.Mesh( geometry, material );
     scene.add( sphere );
 
@@ -149,7 +149,7 @@ globalThis.pointsList = pointsList;
 function drawPoint(x=0, y=0, z=0){
     // console.log('draw');
     let bufferGeom = new THREE.BufferGeometry();
-    let bufferMaterial = new THREE.PointsMaterial({ size: 0.1, color: 0x0000ff });
+    let bufferMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0x0000ff });
 
     let point = new THREE.Points(bufferGeom, bufferMaterial);
 
@@ -244,6 +244,57 @@ function animation(matrixIndex){
 
 globalThis.animation = animation;
 
+function depthAnimation(matrixIndex, redValInput=0, greenValInput=0, blueValInput=0){
+    // for (let index = 0; index < matricesHolder.length; index++) {
+
+
+        const matrix = matricesHolder[matrixIndex]; //get one of the sphere matrix
+
+        for (let indexR = 0; indexR < matrix.length; indexR++) { 
+            const element = matrix[indexR];
+            for (let index = 0; index < element.length; index++) {
+
+                const point = element[index];
+
+                point.material.color.r = redValInput;
+                point.material.color.g = greenValInput;
+                point.material.color.b = blueValInput;
+                
+            }
+            
+        }
+
+        if (matrixIndex == matricesHolder.length-1) {
+            matrixIndex = 0;
+
+            if(redValInput==1){
+                redValInput=0;
+                greenValInput=1;
+                blueValInput=0;
+            }
+            else if(greenValInput==1){
+                redValInput=0;
+                greenValInput=0;
+                blueValInput=1;
+            }
+            else if(blueValInput==1){
+                redValInput=1;
+                greenValInput=0;
+                blueValInput=0;
+            }
+        } else {
+            matrixIndex++;
+        }
+
+        setTimeout(()=>{
+            depthAnimation(matrixIndex,redValInput,greenValInput,blueValInput);
+        }, 150)
+        return;
+    // }
+}
+
+globalThis.depthAnimation = depthAnimation;
+
 
 function initLights(){
     // Lights
@@ -292,16 +343,19 @@ initLights();
 // setInterval(function() {
 //     animation();
 // }, 2000);
+createMatrix(12,12,0.5);
+createMatrix(12,12,1);
+createMatrix(12,12,1.5);
+createMatrix(12,12,2);
+createMatrix(12,12,2.5);
 
-createMatrix(8,12,1);
-createMatrix(8,12,1.5);
-createMatrix(8,12,2);
+// setInterval(function() {
+//     animation(0);
+//     animation(1);
+//     animation(2);
+// }, 2000);
 
-setInterval(function() {
-    animation(0);
-    animation(1);
-    animation(2);
-}, 2000);
+depthAnimation(0,1,0,0)
 
 
 animate();
