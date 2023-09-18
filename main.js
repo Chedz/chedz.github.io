@@ -6,7 +6,11 @@ let scene, renderer, camera;
 globalThis.THREE= THREE;
 
 let sphere;
-let matricesColorInterval = [0,0,0];
+let matricesColorInterval = [];
+
+let depthAnimationActive = false;
+let depthAnimIntervalId;
+let animIntervalId;
 
 function initScene(){
     scene = new THREE.Scene();
@@ -171,6 +175,7 @@ function createMatrix(numOfCol=8, numOfRow=12, circleRadius=1,){
 
     }
     matricesHolder.push(matrix);
+    matricesColorInterval.push(0);
 }
 globalThis.createMatrix = createMatrix;
 
@@ -246,6 +251,7 @@ globalThis.animation = animation;
 
 function depthAnimation(matrixIndex, redValInput=0, greenValInput=0, blueValInput=0){
     // for (let index = 0; index < matricesHolder.length; index++) {
+        depthAnimationActive = true;
 
 
         const matrix = matricesHolder[matrixIndex]; //get one of the sphere matrix
@@ -286,7 +292,7 @@ function depthAnimation(matrixIndex, redValInput=0, greenValInput=0, blueValInpu
             matrixIndex++;
         }
 
-        setTimeout(()=>{
+        depthAnimIntervalId = setTimeout(()=>{
             depthAnimation(matrixIndex,redValInput,greenValInput,blueValInput);
         }, 150)
         return;
@@ -322,6 +328,58 @@ function initLights(){
     scene.add(directionalLight)
 }
 
+function switchAnimation(){
+    if(depthAnimationActive){
+        depthAnimationActive = false;
+        setAllLed();
+
+        if(depthAnimIntervalId !== undefined){
+            clearTimeout(depthAnimIntervalId);
+
+            animIntervalId = setInterval(function() {
+                animation(0);
+                animation(1);
+                animation(2);
+                animation(3);
+                animation(4);
+            }, 2000);
+        }
+    }
+    else{
+        depthAnimationActive = true;
+        setAllLed();
+
+        if(animIntervalId !== undefined){
+            clearInterval(animIntervalId);
+
+            depthAnimation(0,1,0,0);
+        }
+    }
+
+    function setAllLed(){
+        matricesHolder.forEach(matrixElement => {
+            matrixElement.forEach(elementRow => {
+                elementRow.forEach(elementCol => {
+                    matricesHolder
+                });
+            });
+        });
+
+        for (let i = 0; i < matricesHolder.length; i++) {
+            for (let j = 0; j < matricesHolder[i].length; j++) {
+                for (let k = 0; k < matricesHolder[i][j].length; k++) {
+                    const element = matricesHolder[i][j][k];
+                    element.material.color.r = 0;
+                    element.material.color.g = 0;
+                    element.material.color.b = 1;
+                }
+            }
+        }
+    }
+}
+
+globalThis.switchAnimation = switchAnimation;
+
 
 function animate() {
     requestAnimationFrame( animate );
@@ -353,6 +411,8 @@ createMatrix(12,12,2.5);
 //     animation(0);
 //     animation(1);
 //     animation(2);
+//     animation(3);
+//     animation(4);
 // }, 2000);
 
 depthAnimation(0,1,0,0)
