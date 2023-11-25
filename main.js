@@ -1,4 +1,6 @@
-import * as THREE from 'https://cdn.skypack.dev/three';
+// import * as THREE from 'https://cdn.skypack.dev/three';
+// import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.js"
+import * as THREE from 'three';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js';
 
 
@@ -391,31 +393,19 @@ function animate() {
 
 initScene();
 initLights();
-// drawCircle();
-// createPoints();
-// addBox();
-// let col1 = createColumn();
-// globalThis.col1 = col1;
-// addSphere();
-// createMatrix(8);
-// setInterval(function() {
-//     animation();
-// }, 2000);
+
+//hide button if not in use
+// document.getElementById('mybutton').style.display = "none";
+
+
+//creates led matrices
 createMatrix(12,12,0.5);
 createMatrix(12,12,1);
 createMatrix(12,12,1.5);
 createMatrix(12,12,2);
 createMatrix(12,12,2.5);
-
-// setInterval(function() {
-//     animation(0);
-//     animation(1);
-//     animation(2);
-//     animation(3);
-//     animation(4);
-// }, 2000);
-
-depthAnimation(0,1,0,0)
+//plays depth animaiton
+depthAnimation(0,1,0,0);
 
 
 animate();
