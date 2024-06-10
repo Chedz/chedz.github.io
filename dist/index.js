@@ -50,8 +50,8 @@ scene.add(camera)
 // Controls
 // const controls = new OrbitControls(camera, canvas)
 
-controls.enableZoom = false;
-controls.enableDamping = true
+// controls.enableZoom = false;
+// controls.enableDamping = true
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -70,8 +70,8 @@ const tick = () => {
     // mesh.position.y = Math.sin(elapsedTime) *0.1
     boxMesh.position.z = Math.sin(elapsedTime) * 1
 
-    controls.update()
-    controls.enableDamping = true
+    // controls.update()
+    // controls.enableDamping = true
     renderer.render(scene,camera)
     window.requestAnimationFrame(tick)
 };
