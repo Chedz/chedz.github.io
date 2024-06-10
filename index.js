@@ -1,4 +1,4 @@
-import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js'
+// import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js'
 import * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 const canvas = document.querySelector('canvas.webgl')
 
@@ -48,7 +48,7 @@ camera.position.z = 3
 scene.add(camera)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
+// const controls = new OrbitControls(camera, canvas)
 
 controls.enableZoom = false;
 controls.enableDamping = true
