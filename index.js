@@ -62,9 +62,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
 function updateCamera(event) {
     let div1 = document.getElementById("div1");
-    console.log(event.deltaY);
-    camera.position.x = 10 - event.deltaY / 500.0;
-    camera.position.z = 10 - event.deltaY / 500.0;
+    camera.position.x = event.deltaY;
+    camera.position.z = event.deltaY;
+
+    console.log(camera.position.x);
+    console.log(camera.position.z);
 }
 
 // document.addEventListener("scroll", updateCamera);
