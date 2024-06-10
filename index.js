@@ -60,7 +60,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width,sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
-const yScrollCounter = 0;
+let yScrollCounter = 0;
 globalThis.yScrollCounter = yScrollCounter;
 
 function updateCamera(event) {
