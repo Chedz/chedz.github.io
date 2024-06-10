@@ -60,14 +60,15 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width,sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
-function updateCamera(ev) {
+function updateCamera(event) {
     let div1 = document.getElementById("div1");
-    console.log(div1);
-    camera.position.x = 10 - window.scrollY / 500.0;
-    camera.position.z = 10 - window.scrollY / 500.0;
+    console.log(event.deltaY);
+    camera.position.x = 10 - event.deltaY / 500.0;
+    camera.position.z = 10 - event.deltaY / 500.0;
 }
 
-document.addEventListener("scroll", updateCamera);
+// document.addEventListener("scroll", updateCamera);
+document.addEventListener("wheel", updateCamera);
 
 const clock = new THREE.Clock()
 
