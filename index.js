@@ -67,7 +67,7 @@ function updateCamera(ev) {
     camera.position.z = 10 - window.scrollY / 500.0;
 }
 
-window.addEventListener("scroll", updateCamera);
+document.addEventListener("scroll", updateCamera);
 
 const clock = new THREE.Clock()
 
