@@ -60,6 +60,14 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width,sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
+function updateCamera(ev) {
+    let div1 = document.getElementById("div1");
+    camera.position.x = 10 - window.scrollY / 500.0;
+    camera.position.z = 10 - window.scrollY / 500.0;
+}
+
+window.addEventListener("scroll", updateCamera);
+
 const clock = new THREE.Clock()
 
 const tick = () => {
